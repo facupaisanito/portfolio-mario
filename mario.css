@@ -45,14 +45,30 @@ canvas {
 .indisplay.seed{ left: 0; }
 
 .text {
-  position: absolute;
-  z-index: 14;
-  text-align: left;
-  line-height: 210%;
-  vertical-align: middle;
+	position: absolute;
+	z-index: 14;
+	line-height: 210%;
+	vertical-align: middle;
+	height: 489px;
 }
+
 .text * {
   margin: 0;
+}
+
+.text .span {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    height: 489px;
+	margin-left: 340px;
+}
+
+.text:nth-child(2n) .span {
+    margin-top: -64px;
 }
 
 .score {

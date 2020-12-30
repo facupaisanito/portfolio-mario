@@ -8,7 +8,8 @@ function startLoadingMaps() {
   if(window.location.protocol == "file:") return;
     
   // Over-eager loading ftw!
-  passivelyLoadMap([1,2], new XMLHttpRequest());
+  // dont load next map
+  // passivelyLoadMap([1,2], new XMLHttpRequest());
 }
 
 // Finds a map, parses it, then recurses on the next map

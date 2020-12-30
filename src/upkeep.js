@@ -170,11 +170,17 @@ function maintainPlayer(update) {
         player.xvel = min(0, player.xvel);
     }
   }
-  // Player is moving to the left
-  else if(player.left < 0) {
-    // Stop Player from going to the left.
-    player.xvel = max(0, player.xvel);
+  else if(player.left < gamescreen.middlex/2) {
+    // If Player is to the right of the gamescreen's middle, move the gamescreen
+    // if(player.left < gamescreen.right - gamescreen.left)
+      player.xvel = min(0, player.xvel);
   }
+  // // Player is moving to the left
+  // else if(player.left < 0) {
+  //   // Stop Player from going to the left.
+  //   player.xvel = max(0, player.xvel);
+    
+  // }
   
   // Player is hitting something (stop jumping)
   if(player.under) player.jumpcount = 0;

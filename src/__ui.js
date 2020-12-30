@@ -7,6 +7,59 @@ var loadstart,
     body,
     elemSelect;
 
+var game_iframe = document.getElementById('game');
+
+var ppressed = false;
+
+/*
+  Sound toggle
+*/
+var keyd = new KeyboardEvent("keydown", {bubbles: true, cancelable: true, keyCode: 68});
+var sound_toggle = document.getElementById('sound-toggle');
+var muteBool = localStorage.getItem('custom_mute') ? localStorage.getItem('custom_mute') : 'Off';
+var applyOnceBool = true;
+
+function soundMute() {
+  sound_toggle.innerHTML = '<div class="label"><img src="/assets/img/sound_off_icon.png" width="16px"> Sound Off </div>';
+  game_iframe.contentWindow.customMute = true;
+  game.AudioPlayer.pause();
+  localStorage.setItem('custom_mute','On');
+}
+
+function soundUnmute() {
+  sound_toggle.innerHTML = '<div class="label"><img src="/assets/img/sound_on_icon.png" width="16px"> Sound On</div>';
+  game_iframe.contentWindow.customMute = false;
+  game.AudioPlayer.resume();
+  localStorage.setItem('custom_mute','Off');
+}
+
+if (sound_toggle) {
+	sound_toggle.addEventListener("mousedown", function( event ) {
+		if (game_iframe.contentDocument.getElementById("paused")) {
+			game_iframe.contentDocument.getElementById("paused").style.display = "none";
+		}
+		game_iframe.focus();
+		if (muteBool == 'On') {
+			soundUnmute();
+		muteBool = 'Off';
+		} else {
+			soundMute();
+			muteBool = 'On';
+		}
+	});
+
+	sound_toggle.addEventListener("mouseup", function( event ) {
+		if (game_iframe.contentDocument.getElementById("paused")) {
+		  game_iframe.contentDocument.getElementById("paused").style.display = "none";
+		}
+		game_iframe.focus();
+	});
+}
+
+if (muteBool == 'On') {
+  soundMute();
+}
+
 function start() {
   // Don't double start
   if(window.loadstart) return;
@@ -27,8 +80,74 @@ function start() {
   // Options
   setOptions();
   
+  // Key Mapping Menu
+  setKeyMappingMenu();
+  
   // Make lots of friends
   setCheats();
+
+  game.startLoadingMaps();
+
+  setInterval(checkFocus, 500); 
+
+	game_iframe.contentDocument.addEventListener("keydown", event => {
+    if (event.keyCode === 80) {
+      ppressed = true;
+    }
+	  if (applyOnceBool) {
+	  	if (muteBool == 'Off') {
+	        if (event.keyCode === 68 || event.keyCode === 39) {
+	          soundUnmute();
+	        }
+	    }
+	    applyOnceBool = false;
+	  }
+	});
+  
+  // displaying fire button
+  var last_power = 1;
+  if (is_mobile) {
+    setInterval(function() {
+      if (last_power != game.player.power) {
+        if (game.player.power > 2) {
+          game_iframe.contentDocument.getElementById('move-fire').style.display = "block";
+        } else {
+          game_iframe.contentDocument.getElementById('move-fire').style.display = "none";
+        }
+      }
+      last_power = game.player.power;
+    }, 500);
+  }
+
+  if (is_fullscreen) {
+    game_iframe.contentDocument.getElementById('explanation').style.display = "block";
+  } 
+
+}
+
+/*
+ Pausing game if iframe is out of focus
+ */
+
+var game_paused = false;
+
+function checkFocus() { 
+  if (!ppressed) {
+    if(document.activeElement != document.getElementById("game")) {
+      if (!game.paused) {
+          game.pause();
+      }
+      game_iframe.contentDocument.getElementById("paused").style.display = "flex";
+      game_paused = true;
+    } else {
+      if (game.paused) { 
+        game.unpause();
+      }
+      game_iframe.contentDocument.getElementById("paused").style.display = "none";
+      game_paused = false;
+    }
+  }
+  //console.log(game.paused); 
 }
 
 function setLocalStatus() {
@@ -159,20 +278,56 @@ function setOptions() {
   out.innerHTML += innerHTML + "<br />More coming soon!";
 }
 
+// Fills the keys mapping menu with div and input to change the keys
+function setKeyMappingMenu() {
+  var out = document.getElementById("in_keymapping"),
+      keys = [
+        "Up",
+        "Down",
+        "Left",
+        "Right",
+        "Sprint",
+    "Pause",
+    "Mute"
+      ],
+      innerHTML = "", key, low, i;
+  for(i in keys){
+    key = keys[i];
+    low = key.toLowerCase();
+      innerHTML += "<div class='maprectout'><div class='maprect big larger'>" + key + "<input onkeydown='setKey(event)' type='texte' id='" + low + "' readonly></input></div></div>";
+      innerHTML += "<br />";
+  }
+  innerHTML += "<br />";
+  out.innerHTML += innerHTML;
+      
+}
+
+function setKey(event) {
+  game.postMessage({
+    type: "setKey",
+    action: event.target.id,
+  keyCode: event.keyCode
+  }, "*");
+  
+  //show the keyCode used in the UI
+  event.target.value = event.keyCode;
+}
+
 // toggleGame('XYZ') sends a message to the game to toggle XYZ
 function toggleGame(me) {
   game.postMessage({
     type: "toggleOption",
     option: me
   }, "*");
+  if (me) {
+
+  }
 }
 
 function setCheats() {
   var i;
   console.log("Hi, thanks for playing Full Screen Mario! I see you're using the console.");
   console.log("There's not really any way to stop you from messing around so if you'd like to know the common cheats, enter \"displayCheats()\" here.");
-  console.log("If you'd like, go ahead and look around the source code. There are a few surprises you might have fun with... ;)");
-  console.log("http://www.github.com/DiogenesTheCynic/FullScreenMario");
   window.cheats = {
     Change_Map: "game.setMap([#,#] or #,#);",
     Change_Map_Location: "game.shiftToLocation(#);",
@@ -202,3 +357,5 @@ function printCheat(name, text) {
     name += ".";
   console.log(name.replace("_", " ") + "...... " + text);
 }
+
+

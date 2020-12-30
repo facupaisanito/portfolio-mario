@@ -15,8 +15,8 @@ function FullScreenMario() {
   window.bodystyle = body.style;
   
   // Know when to shut up
-  window.verbosity = {Maps: false,
-                      Sounds: false,
+  window.verbosity = {Maps: true,
+                      Sounds: true,
                       };
   
   window.requestAnimationFrame = window.requestAnimationFrame
@@ -213,8 +213,8 @@ function resetSounds() {
 // This starts off with 7 cols and 6 rows (each has 1 on each side for padding)
 function resetQuadrants() {
   window.QuadsKeeper = new QuadsKeepr({
-    num_rows: 5,
-    num_cols: 6,
+    num_rows: 3,
+    num_cols: 4,
     screen_width: window.innerWidth,
     screen_height: window.innerHeight,
     tolerance: unitsized2,

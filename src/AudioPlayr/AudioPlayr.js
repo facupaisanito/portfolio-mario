@@ -2,6 +2,8 @@ function playCurrentThemeHurry(name_raw) {
   AudioPlayer.playTheme("Hurry " + (name_raw || area.theme));
 }
 
+var customMute = true;
+
 /* AudioPlayr.js
  * A library to play audio files derived from Full Screen Mario
  * This will:
@@ -75,7 +77,9 @@ function AudioPlayr(settings) {
     sound.volume = !muted;
     
     // This plays the sound.
-    sound.play();
+    if (!customMute) {
+      sound.play();
+    }
     
     // If this was the first time the sound was added, let it know how to stop
     if(!(sound.used++))
@@ -187,7 +191,7 @@ function AudioPlayr(settings) {
   
   // Public: simple pause and resume functions
   this.pause = function() { for(var i in sounds) if(sounds[i]) soundPause(sounds[i]); }
-  this.resume = function() { for(var i in sounds) if(sounds[i]) soundPlay(sounds[i]); }
+  this.resume = function() { for(var i in sounds) if(sounds[i] && !customMute) soundPlay(sounds[i]); }
   this.pauseTheme = function() { if(theme) theme.pause(); }
   this.resumeTheme = function() { if(theme) theme.play(); }
   this.clear = function() {
@@ -212,7 +216,7 @@ function AudioPlayr(settings) {
   }
   
   // Quick play, pause
-  function soundPlay(sound) { sound.play(); }
+  function soundPlay(sound) { if (!customMute) sound.play(); }
   function soundPause(sound) { sound.pause(); }
   
   // Carefully stops a sound
@@ -264,7 +268,9 @@ function AudioPlayr(settings) {
     }
     
     // This preloads the sound.
-    sound.play();
+    if (!customMute) {
+      sound.play();
+    }
     
     return sound;
   }
