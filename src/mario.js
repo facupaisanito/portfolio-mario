@@ -1,5 +1,22 @@
 /* mario.js */
 // Starts everything.
+/// <reference path="data.js" />
+/// <reference path="editor.js" />
+/// <reference path="gamepad.js" />
+/// <reference path="generator.js" />
+/// <reference path="library.js" />
+/// <reference path="load.js" />
+/// <reference path="maps.js" />
+// / <reference path="mario.js" />
+/// <reference path="sprites.js" />
+/// <reference path="things.js" />
+/// <reference path="toned.js" />
+/// <reference path="triggers.js" />
+/// <reference path="upkeep.js" />
+/// <reference path="utility.js" />
+/// <reference path="TimeHandlr/TimeHandlr.js" />
+/// <reference path="AudioPlayr/AudioPlayr.js" />
+/// <reference path="QuadsKeepr/QuadsKeepr.js" />
 
 function FullScreenMario() {
   var time_start = Date.now();
@@ -76,7 +93,7 @@ function ensureLocalStorage() {
 
 /* Basic reset operations */
 function resetMeasurements() {
-  resetUnitsize(4);
+  resetUnitsize(6);
   resetTimer(1000 / 60);
   
   window.jumplev1 = 32;
@@ -213,8 +230,8 @@ function resetSounds() {
 // This starts off with 7 cols and 6 rows (each has 1 on each side for padding)
 function resetQuadrants() {
   window.QuadsKeeper = new QuadsKeepr({
-    num_rows: 3,
-    num_cols: 4,
+    num_rows: 5,
+    num_cols: 6,
     screen_width: window.innerWidth,
     screen_height: window.innerHeight,
     tolerance: unitsized2,

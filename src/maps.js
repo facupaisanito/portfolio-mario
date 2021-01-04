@@ -1140,18 +1140,44 @@ function World11(map) {
       greeter += "  Pause/Mute: P/M ";
       //greeter += "  <br>";
       //greeter += "  TOP- " + (localStorage.highscore || "000000");
+      pushPrePipe(0, 0, 48, false);
       greeter += "</p>";
       pushPreText(greeter, 20, 91);
       
+      var info1 = "<div style='width:350px;max-height:189px;background-color:#d64d00;border-radius:7px;box-shadow:3px 3px #efb28b inset, -3px -3px black inset;background-image: url(\"Theme/Greeting.gif\"), url(\"Theme/Greeting.gif\"), url(\"Theme/Greeting.gif\"), url(\"Theme/Greeting.gif\");background-repeat: no-repeat;background-position: 7px 7px, 336px 7px, 7px 168px, 336px 168px'><p style='text-align:left;padding:7px 0 11px 11px;color:#ffcccc;font-family: Super Plumber Bros;font-size:77px;text-shadow:3px 8px black'><span style='font-size:84px'>Facundo</span><br><br><span style='font-size:81px;line-height:96px'>HIGUERA</span></p></div><div id='boo' style='text-align:right;color:#ffcccc;margin-top:-7px;width:350px;height:35px;'>#software developer</div><p id='explanation' style='text-align:center;<!--/*text-shadow:2px 2px 1px black;*/-->margin-left:7px;'>Problem solving mindset<br>Passionate to learn<br>Excellent resilience <br>Motivated Team player</p>";
+      pushPreText(info1, 220, 91);
+      ///////////////////////
+
+      const fileUrl = 'src/infos.txt' // provide file location
+      var fileReader = new FileReader(); 
+      fileReader.onload = function (e) { 
+        // var fileContents = document.getElementById('filecontents');
+        var fileContents ;
+      //filecontents is a div in the html that displays the file.
+        fileContents.innerText = fileReader.result; 
+        var info2 = fileReader.result; 
+      } 
+      fileReader.readAsText(fileUrl); 
+      pushPreText(info2, 220, 91);
+
+      ///////////////////////
+      passivelyLoadInfo(1, new XMLHttpRequest());
+
       pushPrePattern("backreg", 0, 0, 5);
+      pushPreFloor(-40, 0, 2);
       pushPreFloor(0, 0, 69);
+
+      pushPreThing(Block, 100, jumplev2);
+      pushPreThing(Block, 200, jumplev2);
+      pushPreThing(Block, 240, jumplev2);
+
       
       pushPreThing(Block, 128, jumplev1);
       pushPreThing(Brick, 160, jumplev1);
       pushPreThing(Block, 168, jumplev1, Mushroom);
-      pushPreThing(Goomba, 176, 8);
+      // pushPreThing(Goomba, 176, 8);
       pushPreThing(Brick, 176, jumplev1);
-      pushPreThing(Block, 176, jumplev2);
+      // pushPreThing(Block, 176, jumplev2);
       pushPreThing(Block, 184, jumplev1);
       pushPreThing(Brick, 192, jumplev1);
       pushPrePipe(224, 0, 16, false);

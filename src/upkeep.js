@@ -1,4 +1,21 @@
 /* Upkeep.js */
+/// <reference path="data.js" />
+/// <reference path="editor.js" />
+/// <reference path="gamepad.js" />
+/// <reference path="generator.js" />
+/// <reference path="library.js" />
+/// <reference path="load.js" />
+/// <reference path="maps.js" />
+/// <reference path="mario.js" />
+/// <reference path="sprites.js" />
+/// <reference path="things.js" />
+/// <reference path="toned.js" />
+/// <reference path="triggers.js" />
+// / <reference path="upkeep.js" />
+/// <reference path="utility.js" />
+/// <reference path="TimeHandlr/TimeHandlr.js" />
+/// <reference path="AudioPlayr/AudioPlayr.js" />
+/// <reference path="QuadsKeepr/QuadsKeepr.js" />
 // Contains functions associated with the upkeep
 
 function upkeep() {
@@ -33,6 +50,11 @@ function upkeep() {
     
     refillCanvas();
     
+    // log(" P.xvel:" + roundDigit(player.xvel) +" P.left:" + roundDigit(player.left) +
+    //   " P.right:" + roundDigit(player.right) +" Ggamescreen.left:" + roundDigit(gamescreen.left) +
+    //   " Ggamescreen.middlex:" + roundDigit(gamescreen.middlex) +
+    //   " Ggamescreen.right:" + roundDigit(gamescreen.right) );
+    // log("It took " + (Date.now() - time_start) + " milliseconds to start.");
   }
 }
 
@@ -170,25 +192,28 @@ function maintainPlayer(update) {
         player.xvel = min(0, player.xvel);
     }
   }
-  else if(player.left < gamescreen.middlex/2) {
-    // If Player is to the right of the gamescreen's middle, move the gamescreen
-    // if(player.left < gamescreen.right - gamescreen.left)
-      player.xvel = min(0, player.xvel);
+  // Player is moving to the left
+  else if(player.left < 0) {
+    // Stop Player from going to the left.
+    player.xvel = max(0, player.xvel);
+    // if(player.left < gamescreen.middlex/2){
+    //   if(player.left > gamescreen.right - gamescreen.left)
+    //       player.xvel = min(0, player.xvel);
+    // }
   }
-  // // Player is moving to the left
-  // else if(player.left < 0) {
-  //   // Stop Player from going to the left.
-  //   player.xvel = max(0, player.xvel);
-    
-  // }
   
   // Player is hitting something (stop jumping)
   if(player.under) player.jumpcount = 0;
   
   // Scrolloffset is how far over the middle player's right is
   // It's multiplied by 0 or 1 for map.canscroll
-  window.scrolloffset = (map.canscroll/* || (map.random && !map.noscroll)*/) * (player.right - gamescreen.middlex);
+  // window.scrolloffset = (map.canscroll/* || (map.random && !map.noscroll)*/) * (player.right - gamescreen.middlex);
+  window.scrolloffset = (map.canscroll) * (player.right - gamescreen.middlex);
   if(scrolloffset > 0 && !map.shifting) {
+    scrollWindow(lastscroll = round(min(player.scrollspeed, scrolloffset)));
+  }
+  window.scrolloffset = (map.canscroll) * (player.left - gamescreen.middlex/2);
+  if(scrolloffset < 0 && !map.shifting) {
     scrollWindow(lastscroll = round(min(player.scrollspeed, scrolloffset)));
   }
   else lastscroll = 0;

@@ -42,6 +42,34 @@ function passivelyLoadMap(map, ajax) {
   };
 }
 
+// Finds infos, parses it, then return as string
+function passivelyLoadInfo(map, ajax) {
+  
+  // Maps/WorldXY.js
+  var url = "infos.txt"
+  ajax.open("GET", url, true);
+  mlog("Maps", "Requesting:", url);
+  ajax.send();
+  ajax.onreadystatechange = function() {
+    if(ajax.readyState != 4) return;
+    
+    // Map file found, load it up!
+    if(ajax.status == 200) {
+      // This is potentially insecure, so I'd like to use an editor-style JSON arrangement instead..
+      mapfuncs[map[0]][map[1]] = Function(ajax.responseText);
+      if(window.parentwindow && parentwindow.onMapLoad) {
+        parentwindow.onMapLoad(map[0],map[1]);
+        setTimeout(function() { parentwindow.onMapLoad(map[0],map[1]); }, 2100); // just in case
+      }
+      mlog("Maps", " Loaded: Maps/World" + map + ".js");
+    }
+    // Otherwise, unless it just was a 404, return
+    else if(ajax.status != 404) return;
+    
+    setTimeout(function() { passivelyLoadMap(setNextLevelArr(map), ajax); }, 7);
+  };
+}
+
 function setNextLevelArr(arr) {
   if(arr[1]++ == 4) {
     ++arr[0];

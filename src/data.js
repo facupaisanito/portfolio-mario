@@ -130,7 +130,7 @@ function Data() {
   this.world = new DataObject(0, 0, "WORLD");
   this.coins = new DataObject(0, 0, "COINS");
   this.lives = new DataObject(3, 1, "LIVES");
-  this.time.dir = -1;
+  this.time.dir = 1;
   this.scoreold = 0;
 }
 
