@@ -141,6 +141,8 @@ function spawnText(me, settings) {
   var element = me.element = addText("", me.left, me.top);
   if(typeof(settings) == "object") proliferate(element, settings);
   else element.innerHTML = settings;
+  //By ajax load all html
+  if(element.className = "text") loadDoc(element.firstChild.id);
   me.movement = false;
 }
 
@@ -152,11 +154,11 @@ function checkTexts() {
     me = texts[i]
     element = texts[i].element || me;
     me.right = me.left + element.clientWidth
-    if(me.right < delx) {
-      body.removeChild(element);
-      killNormal(me);
-      deleteThing(element, texts, i);
-    }
+    // if(me.right < delx) {
+    //   body.removeChild(element);
+    //   killNormal(me);
+    //   deleteThing(element, texts, i);
+    // }
   }
 }
 
@@ -1285,6 +1287,7 @@ function coinEmerge(me, solid) {
 function coinEmergeMovement(me, solid) {
   if(!me.alive) return true;
   shiftVert(me, me.yvel);
+  // Can return to Home
   // if(solid && solid.alive && me.bottom > solid.bottom || me.top > solid.top) {
     // killNormal(me);
     // return true;

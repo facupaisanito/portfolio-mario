@@ -42,8 +42,8 @@ function Map() {
   this.underwater = this.current_character = this.current_solid = this.current_scenery = this.xloc = 0;
   this.canscroll = true;
   this.floor = 104;
-  this.time = 400; // optionally specified later
-  this.curloc = -1;
+  this.time = 4000; // optionally specified later
+  this.curloc = 1;
   this.gravity = gravity;
   this.maxyvel = unitsize * 1.75;
   this.maxyvelinv = this.maxyvel * -2.1;
@@ -197,7 +197,7 @@ function shiftToLocation(loc) {
   resetGameState();
   resetGameScreenPosition();
   resetQuadrants();
-  
+
   // Set this location's area as current
   map.areanum = loc.area;
   window.area = map.area = map.areas[map.areanum];
@@ -367,6 +367,11 @@ function spawnMap() {
 
 // Entry Functions
 function goToTransport(transport) {
+  
+  // download cv
+  if(transport == 3)
+    window.open('CV.pdf',"_blank",);
+
   // Goes to a new map
   if(transport instanceof Array) { 
     map.ending = true;
@@ -643,6 +648,10 @@ function pushPreScenerySolid(name, xloc, yloc, repx, repy) {
   prething.yloc -= prething.object.height;
   map.area.presolids.push(prething);
   return prething;
+}
+function pushPreDiv(string, xloc, yloc) {
+  // load with AJAX by loadDoc(string)
+  pushPreText("<div id=\"" + string + "\" class=\"text\" ></div>", xloc, yloc);
 }
 function pushPreText(settings, xloc, yloc) {
   var prething = new PreThing(map.refx + xloc, map.refy - yloc, FuncSpawner, spawnText, settings);
@@ -1108,185 +1117,7 @@ function BlankMap(map) {
   }) ];
 }
 
-// World11 is kept here to avoid loading
-function World11(map) {
-  map.locs = [
-    new Location(0, true),
-    new Location(0, exitPipeVert),
-    new Location(1)
-  ];
-  map.areas = [
-    new Area("Overworld", function() {
-      setLocationGeneration(0);
-      
-      var greeter = "";
-      greeter += "<div style='width:350px;max-height:189px;background-color:#d64d00;border-radius:7px;box-shadow:3px 3px #efb28b inset, -3px -3px black inset;";
-      greeter += "background-image: url(\"Theme/Greeting.gif\"), url(\"Theme/Greeting.gif\"), url(\"Theme/Greeting.gif\"), url(\"Theme/Greeting.gif\");";
-      greeter += "background-repeat: no-repeat;";
-      greeter += "background-position: 7px 7px, 336px 7px, 7px 168px, 336px 168px";
-      greeter += "'>";
-      greeter += "  <p style='text-align:left;padding:7px 0 11px 11px;color:#ffcccc;font-family: Super Plumber Bros;font-size:77px;text-shadow:3px 8px black'>";
-      greeter += "    <span style='font-size:84px'>super</span>";
-      greeter += "    <br><br>"; // To do: make this not so font dependant
-      greeter += "    <span style='font-size:81px;line-height:96px'>MARIO BROS.</span>";
-      greeter += "  </p>";
-      greeter += "</div>";
-      greeter += "<div id='boo' style='text-align:right;color:#ffcccc;margin-top:-7px;width:350px;height:35px;'>&copy;1985 NINTENDO</div>";
-      greeter += "<p id='explanation' style='text-align:center;<!--/*text-shadow:2px 2px 1px black;*/-->margin-left:7px;'>";
-      greeter += "  Move: Arrows/WASD";
-      greeter += "  <br>";
-      greeter += "  Fire/Sprint: Shift/CTRL";
-      greeter += "  <br>";
-      greeter += "  Pause/Mute: P/M ";
-      //greeter += "  <br>";
-      //greeter += "  TOP- " + (localStorage.highscore || "000000");
-      pushPrePipe(0, 0, 48, false);
-      greeter += "</p>";
-      pushPreText(greeter, 20, 91);
-      
-      var info1 = "<div style='width:350px;max-height:189px;background-color:#d64d00;border-radius:7px;box-shadow:3px 3px #efb28b inset, -3px -3px black inset;background-image: url(\"Theme/Greeting.gif\"), url(\"Theme/Greeting.gif\"), url(\"Theme/Greeting.gif\"), url(\"Theme/Greeting.gif\");background-repeat: no-repeat;background-position: 7px 7px, 336px 7px, 7px 168px, 336px 168px'><p style='text-align:left;padding:7px 0 11px 11px;color:#ffcccc;font-family: Super Plumber Bros;font-size:77px;text-shadow:3px 8px black'><span style='font-size:84px'>Facundo</span><br><br><span style='font-size:81px;line-height:96px'>HIGUERA</span></p></div><div id='boo' style='text-align:right;color:#ffcccc;margin-top:-7px;width:350px;height:35px;'>#software developer</div><p id='explanation' style='text-align:center;<!--/*text-shadow:2px 2px 1px black;*/-->margin-left:7px;'>Problem solving mindset<br>Passionate to learn<br>Excellent resilience <br>Motivated Team player</p>";
-      pushPreText(info1, 220, 91);
-      ///////////////////////
 
-      const fileUrl = 'src/infos.txt' // provide file location
-      var fileReader = new FileReader(); 
-      fileReader.onload = function (e) { 
-        // var fileContents = document.getElementById('filecontents');
-        var fileContents ;
-      //filecontents is a div in the html that displays the file.
-        fileContents.innerText = fileReader.result; 
-        var info2 = fileReader.result; 
-      } 
-      fileReader.readAsText(fileUrl); 
-      pushPreText(info2, 220, 91);
-
-      ///////////////////////
-      passivelyLoadInfo(1, new XMLHttpRequest());
-
-      pushPrePattern("backreg", 0, 0, 5);
-      pushPreFloor(-40, 0, 2);
-      pushPreFloor(0, 0, 69);
-
-      pushPreThing(Block, 100, jumplev2);
-      pushPreThing(Block, 200, jumplev2);
-      pushPreThing(Block, 240, jumplev2);
-
-      
-      pushPreThing(Block, 128, jumplev1);
-      pushPreThing(Brick, 160, jumplev1);
-      pushPreThing(Block, 168, jumplev1, Mushroom);
-      // pushPreThing(Goomba, 176, 8);
-      pushPreThing(Brick, 176, jumplev1);
-      // pushPreThing(Block, 176, jumplev2);
-      pushPreThing(Block, 184, jumplev1);
-      pushPreThing(Brick, 192, jumplev1);
-      pushPrePipe(224, 0, 16, false);
-      pushPrePipe(304, 0, 24);
-      pushPrePipe(368, 0, 32);
-      pushPreThing(Goomba, 340, 8);
-      pushPrePipe(368, 0, 32);
-      pushPreThing(Goomba, 412, 8);
-      pushPreThing(Goomba, 422, 8);
-      pushPrePipe(456, 0, 32, false, 2);
-      pushPreThing(Block, 512, 40, [Mushroom, 1], true);
-      pushPreFloor(568, 0, 15);
-      pushPreThing(Brick, 618, jumplev1);
-      pushPreThing(Block, 626, jumplev1, Mushroom);
-      pushPreThing(Brick, 634, jumplev1);
-      pushPreThing(Brick, 640, jumplev2);
-      pushPreThing(Goomba, 640, jumplev2 + 8);
-      pushPreThing(Brick, 648, jumplev2);
-      pushPreThing(Brick, 656, jumplev2);
-      pushPreThing(Goomba, 656, jumplev2 + 8);
-      pushPreThing(Brick, 664, jumplev2);
-      pushPreThing(Brick, 672, jumplev2);
-      pushPreThing(Brick, 680, jumplev2);
-      pushPreThing(Brick, 688, jumplev2);
-      pushPreThing(Brick, 696, jumplev2);
-      pushPreFloor(712, 0, 64);
-      pushPreThing(Brick, 728, jumplev2);
-      pushPreThing(Brick, 736, jumplev2);
-      pushPreThing(Brick, 744, jumplev2);
-      pushPreThing(Brick, 752, jumplev1, Coin);
-      pushPreThing(Block, 752, jumplev2);
-      pushPreThing(Goomba, 776, 8);
-      pushPreThing(Goomba, 788, 8);
-      pushPreThing(Brick, 800, jumplev1);
-      pushPreThing(Brick, 808, jumplev1, Star);
-      pushPreThing(Block, 848, jumplev1);
-      pushPreThing(Koopa, 856, 12);
-      pushPreThing(Block, 872, jumplev1);
-      pushPreThing(Block, 872, jumplev2, Mushroom);
-      pushPreThing(Block, 896, jumplev1);
-      pushPreThing(Goomba, 912, 8);
-      pushPreThing(Goomba, 924, 8);
-      pushPreThing(Brick, 944, jumplev1);
-      pushPreThing(Brick, 968, jumplev2);
-      pushPreThing(Brick, 976, jumplev2);
-      pushPreThing(Brick, 984, jumplev2);
-      pushPreThing(Goomba, 992, 8);
-      pushPreThing(Goomba, 1004, 8);
-      pushPreThing(Goomba, 1024, 8);
-      pushPreThing(Goomba, 1036, 8);
-      pushPreThing(Brick, 1024, jumplev2);
-      pushPreThing(Brick, 1032, jumplev1);
-      pushPreThing(Block, 1032, jumplev2);
-      pushPreThing(Brick, 1040, jumplev1);
-      pushPreThing(Block, 1040, jumplev2);
-      pushPreThing(Brick, 1048, jumplev2);  
-      pushPreThing(Stone, 1072, 8);
-      pushPreThing(Stone, 1080, 16, 1, 2);
-      pushPreThing(Stone, 1088, 24, 1, 3);
-      pushPreThing(Stone, 1096, 32, 1, 4);
-      pushPreThing(Stone, 1120, 32, 1, 4);
-      pushPreThing(Stone, 1128, 24, 1, 3);
-      pushPreThing(Stone, 1136, 16, 1, 2);
-      pushPreThing(Stone, 1144, 8);
-      pushPreThing(Stone, 1184, 8);
-      pushPreThing(Stone, 1192, 16, 1, 2);
-      pushPreThing(Stone, 1200, 24, 1, 3);
-      pushPreThing(Stone, 1208, 32, 1, 4);
-      pushPreThing(Stone, 1216, 32, 1, 4);
-      
-      pushPreFloor(1240, 0, 69);
-      pushPreThing(Stone, 1240, 32, 1, 4);
-      pushPreThing(Stone, 1248, 24, 1, 3);
-      pushPreThing(Stone, 1256, 16, 1, 2);
-      pushPreThing(Stone, 1264, 8, 1, 1);
-      pushPrePipe(1304, 0, 16, false, false, 1);
-      
-      pushPreThing(Brick, 1344, jumplev1);
-      pushPreThing(Brick, 1352, jumplev1);
-      pushPreThing(Block, 1360, jumplev1);
-      pushPreThing(Brick, 1368, jumplev1);
-      pushPreThing(Goomba, 1392, 8);
-      pushPreThing(Goomba, 1404, 8);
-      
-      pushPrePipe(1432, 0, 16);
-      pushPreThing(Stone, 1448, 8);
-      pushPreThing(Stone, 1456, 16, 1, 2);
-      pushPreThing(Stone, 1464, 24, 1, 3);
-      pushPreThing(Stone, 1472, 32, 1, 4);
-      pushPreThing(Stone, 1480, 40, 1, 5);
-      pushPreThing(Stone, 1488, 48, 1, 6);
-      pushPreThing(Stone, 1496, 56, 1, 7);
-      pushPreThing(Stone, 1504, 64, 2, 8);
-      endCastleOutside(1580, 0, 1);
-      
-    }),
-    new Area("Underworld", function() {
-      setLocationGeneration(2);
-      makeCeiling(32, 7);
-      pushPreFloor(0, 0, 17);
-      fillPreThing(Brick, 0, 8, 1, 11, 8, 8);
-      fillPreThing(Brick, 32, 8, 7, 3, 8, 8);
-      fillPreThing(Coin, 33, 31, 7, 2, 8, 16);
-      fillPreThing(Coin, 41, 63, 5, 1, 8, 8);
-      pushPreThing(PipeSide, 104, 16, 1);
-      pushPreThing(PipeVertical, 120, 88, 88);
-    })
-  ];
-}
 
 /* Random Maps */
 function randMapType(map) {
@@ -1398,4 +1229,194 @@ function WorldRandomCastle(map) {
   };
   map.respawndist = 35;
   randMapType(map);
+}
+
+
+// World11 is kept here to avoid loading
+function World11(map) {
+  map.locs = [
+    new Location(0, true),          //0
+    new Location(0, exitPipeVert),  //1
+    new Location(1),                //2
+    new Location(0, exitPipeVert),  //3 Exit pipe for download cv
+    new Location(2),  //4 Into Experience
+    new Location(0, exitPipeVert)   //5 Exit experience
+  ];
+  map.areas = [
+    new Area("Overworld", function() {
+      setLocationGeneration(0);
+      pushPrePipe(0, 0, 48, false);
+      pushPreDiv("info1", 20, 91);  //Summary
+      pushPreDiv("info2", 200, 80); //Soft skills
+      pushPreDiv("info3", 300, 80); //Hard skills
+      pushPreDiv("info4", 400, 80); //Lang
+      pushPreDiv("info5", 500, 80); //Lang
+      pushPreDiv("info6", 600, 80); //Lang
+      
+      pushPreText("<img src=\"img/pdf.png\" style=\"width:64px;height:64px;\"></img>",226,10);
+      // pushPreText("<img src=\"img/pdf.png\" style=\"width:32px;height:32px;\"></img>",225,1);
+      fillPreThing(Coin, 240, 63, 5, 2, 8, 8);
+      
+      pushPrePattern("backreg", 0, 0, 5);
+      pushPreFloor(-40, 0, 2);
+      pushPreFloor(0, 0, 69);
+      
+      // pushPreThing(Block, 100, jumplev2);
+      // pushPreThing(Block, 200, jumplev2);
+      // pushPrePipe(40, 0, 16, false, 2,5);
+
+      // pushPrePipe(40, 0, 16, false, 4,5);
+      // pushPrePipe(80, 0, 16, false, 4,1);
+      // pushPrePipe(200, 0, 16, false, 2,3);
+      
+      pushPreThing(Block, 128, jumplev1);
+      pushPreThing(Brick, 160, jumplev1);
+      pushPreThing(Block, 168, jumplev1, Mushroom);
+      // pushPreThing(Goomba, 176, 8);
+      pushPreThing(Brick, 176, jumplev1);
+      pushPreThing(Block, 176, jumplev2);
+      pushPreThing(Block, 184, jumplev1);
+      pushPreThing(Brick, 192, jumplev1);
+      pushPrePipe(224, 0, 16, false, 3,3);  //Pipe donwload cv
+      // pushPrePipe(224, 0, 16, false);
+      pushPrePipe(304, 0, 16, false, 4,5);  //Pipe for Experience
+      // pushPrePipe(304, 0, 24);
+      pushPrePipe(368, 0, 32);
+      pushPreThing(Goomba, 340, 8);
+      pushPrePipe(368, 0, 32);
+      // pushPreThing(Goomba, 412, 8);
+      // pushPreThing(Goomba, 422, 8);
+      pushPrePipe(456, 0, 32, false, 2);
+      //500
+      // pushPreDiv("info5", 500, 80); //Education
+      pushPreThing(Block, 512, 40, [Mushroom, 1], true);
+      pushPreFloor(568, 0, 15);
+      // pushPreDiv("info6", 600, 80); //Contact
+      pushPreThing(Brick, 618, jumplev1);
+      pushPreThing(Block, 626, jumplev1, Mushroom);
+      pushPreThing(Brick, 634, jumplev1);
+      pushPreThing(Brick, 640, jumplev2);
+      pushPreThing(Goomba, 640, jumplev2 + 8);
+      pushPreThing(Brick, 648, jumplev2);
+      pushPreThing(Brick, 656, jumplev2);
+      pushPreThing(Goomba, 656, jumplev2 + 8);
+      pushPreThing(Brick, 664, jumplev2);
+      pushPreThing(Brick, 672, jumplev2);
+      pushPreThing(Brick, 680, jumplev2);
+      pushPreThing(Brick, 688, jumplev2);
+      pushPreThing(Brick, 696, jumplev2);
+      pushPreFloor(712, 0, 64);
+      pushPreThing(Brick, 728, jumplev2);
+      pushPreThing(Brick, 736, jumplev2);
+      pushPreThing(Brick, 744, jumplev2);
+      pushPreThing(Brick, 752, jumplev1, Coin);
+      pushPreThing(Block, 752, jumplev2);
+      pushPreThing(Goomba, 776, 8);
+      pushPreThing(Goomba, 788, 8);
+      pushPreThing(Brick, 800, jumplev1);
+      pushPreThing(Brick, 808, jumplev1, Star);
+      pushPreThing(Block, 848, jumplev1);
+      pushPreThing(Koopa, 856, 12);
+      pushPreThing(Block, 872, jumplev1);
+      pushPreThing(Block, 872, jumplev2, Mushroom);
+      pushPreThing(Block, 896, jumplev1);
+      pushPreThing(Goomba, 912, 8);
+      pushPreThing(Goomba, 924, 8);
+      pushPreThing(Brick, 944, jumplev1);
+      pushPreThing(Brick, 968, jumplev2);
+      pushPreThing(Brick, 976, jumplev2);
+      pushPreThing(Brick, 984, jumplev2);
+      pushPreThing(Goomba, 992, 8);
+      //1000
+      pushPreThing(Goomba, 1004, 8);
+      pushPreThing(Goomba, 1024, 8);
+      pushPreThing(Goomba, 1036, 8);
+      pushPreThing(Brick, 1024, jumplev2);
+      pushPreThing(Brick, 1032, jumplev1);
+      pushPreThing(Block, 1032, jumplev2);
+      pushPreThing(Brick, 1040, jumplev1);
+      pushPreThing(Block, 1040, jumplev2);
+      pushPreThing(Brick, 1048, jumplev2);  
+      pushPreThing(Stone, 1072, 8);
+      pushPreThing(Stone, 1080, 16, 1, 2);
+      pushPreThing(Stone, 1088, 24, 1, 3);
+      pushPreThing(Stone, 1096, 32, 1, 4);
+      pushPreThing(Stone, 1120, 32, 1, 4);
+      pushPreThing(Stone, 1128, 24, 1, 3);
+      pushPreThing(Stone, 1136, 16, 1, 2);
+      pushPreThing(Stone, 1144, 8);
+      pushPreThing(Stone, 1184, 8);
+      pushPreThing(Stone, 1192, 16, 1, 2);
+      pushPreThing(Stone, 1200, 24, 1, 3);
+      pushPreThing(Stone, 1208, 32, 1, 4);
+      pushPreThing(Stone, 1216, 32, 1, 4);
+      
+      pushPreFloor(1240, 0, 69);
+      pushPreThing(Stone, 1240, 32, 1, 4);
+      pushPreThing(Stone, 1248, 24, 1, 3);
+      pushPreThing(Stone, 1256, 16, 1, 2);
+      pushPreThing(Stone, 1264, 8, 1, 1);
+      // pushPrePipe(1304, 0, 16, false, false, 1);
+      
+      pushPreThing(Brick, 1344, jumplev1);
+      pushPreThing(Brick, 1352, jumplev1);
+      pushPreThing(Block, 1360, jumplev1);
+      pushPreThing(Brick, 1368, jumplev1);
+      pushPreThing(Goomba, 1392, 8);
+      pushPreThing(Goomba, 1404, 8);
+      
+      pushPrePipe(1432, 0, 16);
+      pushPreThing(Stone, 1448, 8);
+      pushPreThing(Stone, 1456, 16, 1, 2);
+      pushPreThing(Stone, 1464, 24, 1, 3);
+      pushPreThing(Stone, 1472, 32, 1, 4);
+      pushPreThing(Stone, 1480, 40, 1, 5);
+      pushPreThing(Stone, 1488, 48, 1, 6);
+      pushPreThing(Stone, 1496, 56, 1, 7);
+      pushPreThing(Stone, 1504, 64, 2, 8);
+      endCastleOutside(1580, 0, 1);
+      
+    }),
+    new Area("Underworld", function() {
+      setLocationGeneration(2);
+      makeCeiling(32, 7);
+      pushPreFloor(0, 0, 17);
+      fillPreThing(Brick, 0, 8, 1, 11, 8, 8);
+      fillPreThing(Brick, 32, 8, 7, 3, 8, 8);
+      fillPreThing(Coin, 33, 31, 7, 2, 8, 16);
+      fillPreThing(Coin, 41, 63, 5, 1, 8, 8);
+      pushPreThing(PipeSide, 104, 16, 1);
+      pushPreThing(PipeVertical, 120, 88, 88);
+    }),
+    new Area("Underworld", function() {
+      setLocationGeneration(4);
+      makeCeiling(32, 7);
+      pushPreFloor(0, 0, 100);
+
+
+      pushPreDiv("exp1", 50, 91);  //Summary
+      pushPreThing(Block, 50, jumplev1);
+      pushPreDiv("exp2", 150, 91);  //Summary
+      pushPreThing(Block, 150, jumplev1);
+      pushPreDiv("exp3", 250, 91);  //Summary
+      pushPreThing(Block, 250, jumplev1);
+      pushPreDiv("exp4", 350, 91);  //Summary
+      pushPreThing(Block, 350, jumplev1);
+      pushPreDiv("exp5", 450, 91);  //Summary
+      pushPreThing(Block, 450, jumplev1);
+      pushPreDiv("exp6", 550, 91);  //Summary
+      pushPreThing(Block, 550, jumplev1);
+      pushPreDiv("exp7", 650, 91);  //Summary
+      pushPreThing(Block, 650, jumplev1);
+
+
+
+      // fillPreThing(Brick, 0, 8, 1, 11, 8, 8);
+      // fillPreThing(Brick, 32, 8, 7, 3, 8, 8);
+      // fillPreThing(Coin, 33, 31, 7, 2, 8, 16);
+      // fillPreThing(Coin, 41, 63, 5, 1, 8, 8);
+      pushPreThing(PipeSide, 1000, 16, 5);
+      pushPreThing(PipeVertical, 1020, 88, 88);
+    })
+  ];
 }

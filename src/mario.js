@@ -93,8 +93,9 @@ function ensureLocalStorage() {
 
 /* Basic reset operations */
 function resetMeasurements() {
-  resetUnitsize(6);
-  resetTimer(1000 / 60);
+  resetUnitsize(8);
+  // resetTimer(1000 / 60);
+  resetTimer(8);
   
   window.jumplev1 = 32;
   window.jumplev2 = 64;
@@ -175,7 +176,7 @@ function resetSounds() {
   
   window.AudioPlayer = new AudioPlayr({
     directory: "Sounds",
-    getVolumeLocal: function() { return .49; },
+    getVolumeLocal: function() { return .20; },
     getThemeDefault: function() { return area.theme; }, 
     library: {
       Sounds: [
@@ -287,7 +288,6 @@ function shiftElements(stuff, x, y) {
     elementShiftTop(elem, y);
   }
 }
-
 // Similar to scrollWindow, but saves the player's x-loc
 function scrollPlayer(x, y, see) {
   var saveleft = player.left,

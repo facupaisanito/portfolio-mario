@@ -191,7 +191,39 @@ function updateDataTime(me) {
   if(!notime) {
     map.time = me.amount += me.dir;
     updateDataElement(me);
+
+    updateVariables("fps",window.fps);
+    updateVariables("gamescreen.left",gamescreen.left);
+    updateVariables("gamescreen.right",gamescreen.right);
+    updateVariables("player.left",player.left);
+    updateVariables("player.right",player.right);
+    updateVariables("QdK.getNumCols()",QuadsKeeper.getNumCols());
+    updateVariables("QdK.getQuadWidth()",QuadsKeeper.getQuadWidth());
+    updateVariables("QdK.getDelX()",QuadsKeeper.getDelX());
+    updateVariables("QdK.getOutDifference()",QuadsKeeper.getOutDifference());
+    updateVariables("solid.right",solid.right);
   }
+}
+
+// Update Variables as Log
+function updateVariables(name, value){
+  var table = document.getElementById('MainTable');
+  for(var i =0, row ; row = table.rows[i]; i++){
+    if ( row.cells[0].innerText == name){
+      // row.cells[1].innerText=parseInt(value,10);
+      row.cells[1].innerText=value.toFixed(2);
+      var listed = true;
+    }
+  }
+  //if doesnt exist insert row
+  if(!listed){
+    var x=document.getElementById('MainTable').insertRow(0);
+    var y = x.insertCell(0);
+    var z = x.insertCell(1);
+    y.innerHTML=name;
+    // z.innerHTML=parseInt(value,10);
+    z.innerHTML=value.toFixed(2);
+  }    
 }
 
 // Updates a typical DataObject to its value

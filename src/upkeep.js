@@ -92,6 +92,7 @@ function maintainSolids(update) {
     if(solid.alive) {
       if(solid.movement) solid.movement(solid);
     }
+    // Can return to Home
     if(!solid.alive || solid.right < QuadsKeeper.getDelX())
       deleteThing(solid, solids, i);
   }

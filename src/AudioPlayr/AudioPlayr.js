@@ -2,7 +2,7 @@ function playCurrentThemeHurry(name_raw) {
   AudioPlayer.playTheme("Hurry " + (name_raw || area.theme));
 }
 
-var customMute = true;
+var customMute = false;
 
 /* AudioPlayr.js
  * A library to play audio files derived from Full Screen Mario
